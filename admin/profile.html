@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kelola Profil - Panel Admin</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/loading.css" />
+
+    <style>
+      /* SKEMA WARNA TERANG (DEFAULT) */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --bg-main: #f4f6f9;
+        --bg-card: #ffffff;
+        --text-main: #212529;
+        --text-subtle: #6c757d;
+        --border-color: #dee2e6;
+        --sidebar-width: 250px;
+        --input-bg: #ffffff;
+        --input-border: #ced4da;
+      }
+
+      /* SKEMA WARNA GELAP (DARK MODE) */
+      [data-bs-theme="dark"] {
+        --primary-color: #1e293b;
+        --secondary-color: #334155;
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f8fafc;
+        --text-subtle: #cbd5e0;
+        --border-color: #334155;
+        --input-bg: #2d3748;
+        --input-border: #4a5568;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        min-height: 100vh;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--text-main) !important;
+      }
+
+      .custom-text-muted {
+        color: var(--text-subtle) !important;
+      }
+
+      /* Layout Admin Sidebar */
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: var(--primary-color);
+        color: white;
+        padding-top: 20px;
+        z-index: 1000;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+      }
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 12px 20px;
+        display: block;
+        text-decoration: none;
+      }
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 30px;
+        min-height: 100vh;
+        transition: margin-left 0.3s ease;
+      }
+
+      .content-box {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      .form-control {
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--text-main);
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .form-control:focus {
+        background-color: var(--input-bg);
+        color: var(--text-main);
+        border-color: var(--secondary-color);
+      }
+
+      /* PREVIEW FOTO PROFIL */
+      .profile-img-preview {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid var(--border-color);
+      }
+
+      @media (max-width: 991.98px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.show {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Loading Spinner -->
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- SIDEBAR UTAMA ADMIN -->
+    <div class="sidebar d-flex flex-column justify-content-between pb-3" id="adminSidebar">
+      <div>
+        <div class="px-4 mb-4 d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="fw-bold text-white mb-0">My Portofolio</h5>
+            <small class="text-white-50">Zaki Nur Faizi</small>
+          </div>
+          <button class="btn-close btn-close-white d-lg-none" id="closeSidebarBtn" aria-label="Tutup Menu"></button>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link" href="dashboard.html">Dashboard Overview</a>
+          <a class="nav-link active" href="profile.html">Kelola Profil</a>
+          <a class="nav-link" href="projects.html">Kelola Project</a>
+          <a class="nav-link" href="messages.html">Pesan Masuk / Kontak</a>
+          <a class="nav-link" href="admins.html">Kelola Admin</a>
+          <hr class="mx-3 text-secondary" />
+          <a class="nav-link text-danger" href="../index.html" id="logoutLink">&larr; Keluar ke Web</a>
+        </nav>
+      </div>
+
+      <!-- TOGGLE DARK MODE SWITCH (DISAMAKAN DENGAN PROJECTS.HTML) -->
+      <div class="px-4">
+        <hr class="text-secondary" />
+        <div class="form-check form-switch text-white-50">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle" style="cursor: pointer" />
+          <label class="form-check-label small" for="darkModeToggle" style="cursor: pointer">
+            <span id="themeLabelText">Dark Mode</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-outline-secondary d-lg-none me-3" id="openSidebarBtn" aria-label="Buka Menu">☰</button>
+          <h2 class="fw-bold mb-0">Kelola Profil Saya</h2>
+        </div>
+      </div>
+
+      <!-- Skeleton form profil -->
+      <div id="profileFormSkeleton" class="skeleton-wrap content-box p-4 shadow-sm" style="max-width: 800px">
+        <div class="text-center mb-4"><div class="skeleton skeleton-avatar" style="width: 120px; height: 120px"></div></div>
+        <div class="skeleton skeleton-line mb-3" style="height: 38px"></div>
+        <div class="skeleton skeleton-line mb-3" style="height: 38px"></div>
+        <div class="skeleton skeleton-line mb-3" style="height: 38px"></div>
+        <div class="skeleton skeleton-line mb-3" style="height: 90px"></div>
+        <div class="skeleton skeleton-line mb-3" style="height: 38px"></div>
+        <div class="skeleton skeleton-line mb-3" style="height: 38px"></div>
+        <div class="skeleton" style="height: 42px; width: 140px; border-radius: 8px"></div>
+      </div>
+      <div id="profileFormContent" class="content-box p-4 shadow-sm is-loading-content" style="max-width: 800px">
+        <form id="profileForm" novalidate>
+          <!-- FIELD: foto_profil -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Foto Profil <span class="text-danger">*</span></label>
+            <div class="d-flex align-items-center gap-3">
+              <img src="" id="fotoPreview" class="profile-img-preview d-none" alt="Preview Foto Profil" />
+              <div class="profile-img-preview d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 small text-muted" id="fotoPlaceholder" style="width: 110px; height: 110px">Foto</div>
+              <div class="flex-grow-1">
+                <input type="file" class="form-control" id="foto_profil" accept="image/*" />
+                <div class="form-text custom-text-muted">Format gambar (JPG, PNG, WebP). Maksimal 2MB. Kosongkan jika tidak ingin mengubah foto.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- FIELD: nama_lengkap -->
+            <div class="col-md-6 mb-3">
+              <label for="nama_lengkap" class="form-label fw-semibold">Nama Lengkap</label>
+              <input type="text" class="form-control" id="nama_lengkap" placeholder="Masukkan nama lengkap" />
+            </div>
+
+            <!-- FIELD: pekerjaan -->
+            <div class="col-md-6 mb-3">
+              <label for="pekerjaan" class="form-label fw-semibold">Pekerjaan / Role</label>
+              <input type="text" class="form-control" id="pekerjaan" placeholder="Contoh: Frontend Engineer" />
+            </div>
+          </div>
+
+          <!-- FIELD: tagline (dipakai di hero halaman utama) -->
+          <div class="mb-3">
+            <label for="tagline" class="form-label fw-semibold">Tagline Halaman Utama</label>
+            <textarea class="form-control" id="tagline" rows="2" placeholder="Kalimat sambutan singkat di hero beranda..."></textarea>
+            <div class="form-text custom-text-muted">Ditampilkan di bawah judul besar pada halaman Beranda.</div>
+          </div>
+
+          <!-- FIELD: bio_singkat -->
+          <div class="mb-3">
+            <label for="bio_singkat" class="form-label fw-semibold">Bio Singkat</label>
+            <textarea class="form-control" id="bio_singkat" rows="3" placeholder="Tuliskan gambaran singkat profil Anda..."></textarea>
+            <div class="form-text custom-text-muted">Ditampilkan di halaman Tentang.</div>
+          </div>
+
+          <div class="row">
+            <!-- FIELD: email -->
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label fw-semibold">Alamat Email</label>
+              <input type="email" class="form-control" id="email" placeholder="nama@email.com" />
+            </div>
+
+            <!-- FIELD: skills -->
+            <div class="col-md-6 mb-3">
+              <label for="skills" class="form-label fw-semibold">Skills / Keahlian</label>
+              <input type="text" class="form-control" id="skills" placeholder="HTML, CSS, JavaScript, Vue" />
+              <div class="form-text custom-text-muted">Pisahkan keahlian dengan tanda koma.</div>
+            </div>
+          </div>
+
+          <hr class="my-4 my-border" />
+          <h5 class="fw-bold mb-3">Tautan Media Sosial</h5>
+
+          <div class="row">
+            <!-- FIELD: github_url -->
+            <div class="col-md-4 mb-3">
+              <label for="github_url" class="form-label fw-semibold">GitHub URL</label>
+              <input type="url" class="form-control" id="github_url" placeholder="https://github.com/username" />
+            </div>
+
+            <!-- FIELD: linkedin_url -->
+            <div class="col-md-4 mb-3">
+              <label for="linkedin_url" class="form-label fw-semibold">LinkedIn URL</label>
+              <input type="url" class="form-control" id="linkedin_url" placeholder="https://linkedin.com/in/username" />
+            </div>
+
+            <!-- FIELD: instagram_url -->
+            <div class="col-md-4 mb-3">
+              <label for="instagram_url" class="form-label fw-semibold">Instagram URL</label>
+              <input type="url" class="form-control" id="instagram_url" placeholder="https://instagram.com/username" />
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary px-4">Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- CDN Dependensi & Script Store Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/store.js"></script>
+    <script src="../assets/js/loading.js"></script>
+
+    <script>
+      // GUARD: Hanya user yang sudah login yang boleh mengakses halaman ini
+      Store.checkAdminAuth();
+
+      var THEME_KEY = "admin_theme_mode";
+
+      /* LOGIKA DARK MODE TOGGLE */
+      var toggleSwitch = document.getElementById("darkModeToggle");
+      var themeLabelText = document.getElementById("themeLabelText");
+      var savedTheme = localStorage.getItem(THEME_KEY) || "light";
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-bs-theme", theme);
+        document.documentElement.setAttribute("data-theme", theme);
+        if (toggleSwitch) toggleSwitch.checked = theme === "dark";
+        if (themeLabelText) themeLabelText.textContent = theme === "dark" ? "Dark Mode ☾" : "Light Mode ☀";
+        localStorage.setItem(THEME_KEY, theme);
+      }
+
+      // Inisialisasi Tema
+      applyTheme(savedTheme);
+
+      if (toggleSwitch) {
+        toggleSwitch.addEventListener("change", function () {
+          applyTheme(this.checked ? "dark" : "light");
+        });
+      }
+
+      // Toggle Sidebar Mobile
+      var sidebar = document.getElementById("adminSidebar");
+      var openSidebarBtn = document.getElementById("openSidebarBtn");
+      var closeSidebarBtn = document.getElementById("closeSidebarBtn");
+
+      if (openSidebarBtn && closeSidebarBtn && sidebar) {
+        openSidebarBtn.addEventListener("click", function () {
+          sidebar.classList.add("show");
+        });
+
+        closeSidebarBtn.addEventListener("click", function () {
+          sidebar.classList.remove("show");
+        });
+      }
+
+      // --- MUAT DATA PROFIL DARI SUPABASE KE DALAM FORM ---
+      var fotoDataUrl = null;
+      var currentProfileId = null;
+
+      async function loadProfileData() {
+        try {
+          var currentProfile = await Store.getProfile();
+
+          if (currentProfile) {
+            currentProfileId = currentProfile.id || null;
+            fotoDataUrl = currentProfile.avatar || currentProfile.foto || null;
+
+            var elNama = document.getElementById("nama_lengkap");
+            var elPekerjaan = document.getElementById("pekerjaan");
+            var elTagline = document.getElementById("tagline");
+            var elBio = document.getElementById("bio_singkat");
+            var elEmail = document.getElementById("email");
+            var elSkills = document.getElementById("skills");
+            var elGithub = document.getElementById("github_url");
+            var elLinkedin = document.getElementById("linkedin_url");
+            var elInstagram = document.getElementById("instagram_url");
+
+            if (elNama) elNama.value = currentProfile.name || currentProfile.nama || "";
+            if (elPekerjaan) elPekerjaan.value = currentProfile.title || currentProfile.pekerjaan || "";
+            if (elTagline) elTagline.value = currentProfile.tagline || "";
+            if (elBio) elBio.value = currentProfile.bio || "";
+            if (elEmail) elEmail.value = currentProfile.email || "";
+            if (elSkills) elSkills.value = currentProfile.skills || "";
+            if (elGithub) elGithub.value = currentProfile.github || "";
+            if (elLinkedin) elLinkedin.value = currentProfile.linkedin || "";
+            if (elInstagram) elInstagram.value = currentProfile.instagram || "";
+
+            var fotoPreview = document.getElementById("fotoPreview");
+            var fotoPlaceholder = document.getElementById("fotoPlaceholder");
+
+            if (fotoDataUrl && fotoPreview && fotoPlaceholder) {
+              fotoPreview.src = fotoDataUrl;
+              fotoPreview.classList.remove("d-none");
+              fotoPlaceholder.classList.add("d-none");
+            }
+          }
+        } catch (error) {
+          console.error("Gagal memuat profil dari Supabase:", error);
+        } finally {
+          if (window.PageLoading && typeof PageLoading.revealContent === "function") {
+            PageLoading.revealContent("profileFormSkeleton", "profileFormContent");
+          }
+        }
+      }
+
+      // Preview Foto Profil saat memilih file baru
+      var fotoInput = document.getElementById("foto_profil");
+      if (fotoInput) {
+        fotoInput.addEventListener("change", function (e) {
+          var file = e.target.files[0];
+          if (file) {
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+              fotoDataUrl = ev.target.result;
+              var fp = document.getElementById("fotoPreview");
+              var fph = document.getElementById("fotoPlaceholder");
+              if (fp && fph) {
+                fp.src = fotoDataUrl;
+                fp.classList.remove("d-none");
+                fph.classList.add("d-none");
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Handler Simpan Profil (DISIMPAN KE SUPABASE DATABASE)
+      var profileForm = document.getElementById("profileForm");
+      if (profileForm) {
+        profileForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          var submitBtn = profileForm.querySelector('button[type="submit"]');
+          var originalBtnText = submitBtn ? submitBtn.innerHTML : "";
+
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
+          }
+
+          var updatedProfile = {
+            name: document.getElementById("nama_lengkap").value.trim(),
+            title: document.getElementById("pekerjaan").value.trim(),
+            tagline: document.getElementById("tagline").value.trim(),
+            bio: document.getElementById("bio_singkat").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            skills: document.getElementById("skills").value.trim(),
+            github: document.getElementById("github_url").value.trim(),
+            linkedin: document.getElementById("linkedin_url").value.trim(),
+            instagram: document.getElementById("instagram_url").value.trim(),
+            avatar: fotoDataUrl || "",
+          };
+
+          try {
+            var res = await Store.updateProfile(updatedProfile, currentProfileId);
+
+            if (res && res.error) {
+              throw res.error;
+            }
+
+            alert("Perubahan profil berhasil disimpan ke Supabase! Halaman Beranda & Tentang akan otomatis memakai data terbaru ini.");
+          } catch (error) {
+            console.error("Error saat menyimpan profil:", error);
+            alert("Gagal menyimpan profil: " + (error.message || "Terjadi kesalahan sistem."));
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+            }
+          }
+        });
+      }
+
+      // Logout saat memilih "Keluar ke Web"
+      var logoutBtn = document.getElementById("logoutLink");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          Store.logout();
+        });
+      }
+
+      // Inisialisasi awal saat halaman dimuat
+      if (window.PageLoading && typeof PageLoading.withLoading === "function") {
+        PageLoading.withLoading(async function () {
+          await loadProfileData();
+        });
+      } else {
+        document.addEventListener("DOMContentLoaded", async function () {
+          await loadProfileData();
+        });
+      }
+    </script>
+  </body>
+</html>

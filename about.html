@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tentang Saya - Portofolio Saya</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/loading.css" />
+
+    <style>
+      /* SKEMA WARNA TERANG (DEFAULT) */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #7f8c8d;
+        --bg-main: #ffffff;
+        --bg-card: #ffffff;
+        --text-main: #212529;
+        --text-subtle: #495057;
+        --text-light: #ffffff;
+        --border-color: #e2e8f0;
+        --avatar-bg: #6c757d;
+        --badge-bg: #e2e8f0;
+        --badge-text: #2c3e50;
+      }
+
+      /* SKEMA WARNA GELAP (DARK MODE) */
+      [data-theme="dark"] {
+        --primary-color: #1a252f;
+        --secondary-color: #a0aec0;
+        --bg-main: #121212;
+        --bg-card: #1e1e1e;
+        --text-main: #f7fafc;
+        --text-subtle: #cbd5e0;
+        --border-color: #2d3748;
+        --avatar-bg: #2d3748;
+        --badge-bg: #2d3748;
+        --badge-text: #e2e8f0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-main);
+        background-color: var(--bg-main);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        color: var(--text-main) !important;
+      }
+
+      .custom-text-muted {
+        color: var(--text-subtle) !important;
+      }
+
+      .navbar-custom {
+        background-color: var(--primary-color);
+        transition: background-color 0.3s;
+      }
+      .navbar-custom .nav-link {
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .navbar-custom .nav-link.active,
+      .navbar-custom .nav-link:hover {
+        color: var(--text-light);
+      }
+
+      .profile-avatar {
+        background-color: var(--avatar-bg);
+        color: var(--text-light);
+        transition: background-color 0.3s;
+      }
+
+      .custom-badge {
+        display: inline-block;
+        background-color: var(--badge-bg);
+        color: var(--badge-text);
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        margin: 0 0.35rem 0.35rem 0;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .theme-toggle-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: var(--text-light);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .theme-toggle-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      footer {
+        background-color: var(--primary-color);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 20px 0;
+        margin-top: auto;
+        transition: background-color 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Loading Spinner -->
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">MyPortfolio</a>
+
+        <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-3">
+          <button class="theme-toggle-btn me-2" id="themeToggleBtn" aria-label="Mode Gelap">
+            <span id="themeIcon">☾</span>
+          </button>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Buka menu navigasi">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+            <li class="nav-item"><a class="nav-link" href="project.html">Project</a></li>
+            <li class="nav-item"><a class="nav-link active" href="about.html">Tentang</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Kontak</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- KONTEN TENTANG SAYA -->
+    <main class="py-5">
+      <div class="container">
+        <!-- Skeleton Loading -->
+        <div id="aboutSkeleton" class="skeleton-wrap row align-items-center">
+          <div class="col-md-4 mb-4 mb-md-0 text-center">
+            <div class="skeleton skeleton-avatar mx-auto" style="width: 200px; height: 200px; border-radius: 50%;"></div>
+          </div>
+          <div class="col-md-8">
+            <div class="skeleton skeleton-text lg mb-2" style="width: 40%"></div>
+            <div class="skeleton skeleton-text md mb-3" style="width: 55%"></div>
+            <div class="skeleton skeleton-text full mb-2"></div>
+            <div class="skeleton skeleton-text full mb-2"></div>
+            <div class="skeleton skeleton-text md mb-4" style="width: 70%"></div>
+            <div class="skeleton skeleton-text sm mb-3" style="width: 30%"></div>
+            <div>
+              <span class="skeleton skeleton-badge"></span>
+              <span class="skeleton skeleton-badge"></span>
+              <span class="skeleton skeleton-badge"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Konten Utama (Awalnya d-none) -->
+        <div id="aboutContent" class="row align-items-center d-none">
+          <div class="col-md-4 mb-4 mb-md-0 text-center">
+            <div class="profile-avatar rounded-circle mx-auto d-flex align-items-center justify-content-center overflow-hidden" style="width: 200px; height: 200px" id="avatarBox">
+              <span id="avatarPlaceholder">[ Foto Profil ]</span>
+              <img id="avatarImg" class="d-none" style="width: 100%; height: 100%; object-fit: cover" alt="Foto Profil" />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <h1 class="fw-bold mb-1">Tentang Saya</h1>
+            <p class="custom-text-muted fw-semibold fs-5 mb-3" id="aboutNamaRole"></p>
+            <p class="custom-text-muted mb-4" id="aboutBio"></p>
+
+            <h4 class="fw-bold mt-4 mb-3">Keahlian Utama</h4>
+            <div id="aboutSkills"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center">
+      <div class="container">
+        <p class="mb-0">&copy; 2026 MyPortfolio. Semua Hak Dilindungi.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Supabase JS SDK & App Scripts Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/store.js"></script>
+    <script src="assets/js/loading.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const skeletonEl = document.querySelector("#aboutSkeleton");
+        const contentEl = document.querySelector("#aboutContent");
+
+        try {
+          // Ambil Data Profil dari Supabase via store.js
+          const profile = await Store.getProfile();
+
+          if (profile) {
+            // 1. Render Nama & Role/Pekerjaan
+            const namaRoleEl = document.querySelector("#aboutNamaRole");
+            if (namaRoleEl) {
+              const name = profile.full_name || profile.name || "";
+              const role = profile.role || profile.title || profile.pekerjaan || "";
+              namaRoleEl.textContent = role ? `${name} — ${role}` : name;
+            }
+
+            // 2. Render Bio Singkat
+            const bioEl = document.querySelector("#aboutBio");
+            if (bioEl) {
+              bioEl.textContent = profile.bio || profile.bio_singkat || "Belum ada deskripsi profil.";
+            }
+
+            // 3. Render Foto Profil
+            const avatarUrl = profile.avatar_url || profile.avatar || profile.photo || profile.image_url;
+            const avatarImg = document.querySelector("#avatarImg");
+            const avatarPlaceholder = document.querySelector("#avatarPlaceholder");
+
+            if (avatarUrl && avatarImg) {
+              avatarImg.src = avatarUrl;
+              avatarImg.classList.remove("d-none");
+              if (avatarPlaceholder) avatarPlaceholder.classList.add("d-none");
+            }
+
+            // 4. Render Skills / Keahlian
+            const skillsContainer = document.querySelector("#aboutSkills");
+            if (skillsContainer) {
+              const rawSkills = profile.skills || profile.keahlian || "";
+              const skillsArray = Array.isArray(rawSkills) 
+                ? rawSkills 
+                : String(rawSkills).split(",").map(s => s.trim()).filter(Boolean);
+
+              if (skillsArray.length > 0) {
+                skillsContainer.innerHTML = skillsArray
+                  .map(skill => `<span class="custom-badge">${skill}</span>`)
+                  .join("");
+              } else {
+                skillsContainer.innerHTML = `<span class="custom-text-muted small">Belum ada keahlian ditambahkan.</span>`;
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Gagal memuat data profil:", error);
+        } finally {
+          // Sembunyikan Skeleton Loader & Tampilkan Konten
+          if (skeletonEl) skeletonEl.classList.add("d-none");
+          if (contentEl) contentEl.classList.remove("d-none");
+
+          // Matikan indikator Page Loader jika ada
+          if (window.PageLoading && typeof PageLoading.pageReady === "function") {
+            PageLoading.pageReady();
+          }
+        }
+      });
+
+      // --- LOGIKA SWITCH TEMA (DARK MODE) ---
+      const toggleBtn = document.getElementById("themeToggleBtn");
+      const themeIcon = document.getElementById("themeIcon");
+
+      if (toggleBtn) {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute("data-theme", "dark");
+          if (themeIcon) themeIcon.textContent = "☀";
+          toggleBtn.setAttribute("aria-label", "Mode Terang");
+        }
+
+        toggleBtn.addEventListener("click", () => {
+          const currentTheme = document.documentElement.getAttribute("data-theme");
+          let newTheme = "light";
+
+          if (currentTheme !== "dark") {
+            newTheme = "dark";
+            if (themeIcon) themeIcon.textContent = "☀";
+            toggleBtn.setAttribute("aria-label", "Mode Terang");
+          } else {
+            if (themeIcon) themeIcon.textContent = "☾";
+            toggleBtn.setAttribute("aria-label", "Mode Gelap");
+          }
+
+          document.documentElement.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+        });
+      }
+    </script>
+  </body>
+</html>

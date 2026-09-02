@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kelola Admin - Panel Kendali</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/loading.css" />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --bg-main: #f4f6f9;
+        --bg-card: #ffffff;
+        --text-main: #212529;
+        --text-subtle: #6c757d;
+        --border-color: #e2e8f0;
+        --sidebar-width: 250px;
+        --accent-blue: #0d6efd;
+      }
+      [data-bs-theme="dark"] {
+        --primary-color: #1e293b;
+        --secondary-color: #334155;
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f8fafc;
+        --text-subtle: #cbd5e0;
+        --border-color: #334155;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: var(--primary-color);
+        color: white;
+        padding-top: 20px;
+        z-index: 1000;
+      }
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 12px 20px;
+        display: block;
+        text-decoration: none;
+      }
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+      .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 30px;
+        min-height: 100vh;
+      }
+
+      /* LAYOUT UTAMA PERSIS REFERENSI "PROFIL SAYA" */
+      .profile-main-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 40px 30px 30px 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        border: 1px solid var(--border-color);
+        margin-bottom: 24px;
+      }
+
+      /* BINGKAI FOTO LINGKARAN BIRU */
+      .avatar-blue-frame {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        border: 4px solid var(--accent-blue);
+        padding: 3px;
+        margin: 0 auto 16px auto;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .avatar-blue-frame img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .avatar-blue-frame .avatar-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #2563eb;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+
+      .profile-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 6px;
+      }
+      .profile-subtext {
+        color: var(--text-subtle);
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+      }
+
+      /* CONTAINER TOMBOL AKSI DI TENGAH */
+      .profile-action-btn {
+        border-radius: 8px;
+        padding: 8px 24px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      /* SEPARATOR SEPERTI PADA GAMBAR REFERENSI */
+      .section-divider {
+        border-bottom: 1px solid var(--border-color);
+        margin: 30px 0;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--text-main);
+      }
+
+      @media (max-width: 991.98px) {
+        .sidebar { transform: translateX(-100%); }
+        .sidebar.show { transform: translateX(0); }
+        .main-content { margin-left: 0; padding: 20px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar d-flex flex-column justify-content-between pb-3" id="adminSidebar">
+      <div>
+        <div class="px-4 mb-4 d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="fw-bold text-white mb-0">My Portofolio</h5>
+            <small class="text-white-50">Zaki Nur Faizi</small>
+          </div>
+          <button class="btn-close btn-close-white d-lg-none" id="closeSidebarBtn" aria-label="Tutup Menu"></button>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link" href="dashboard.html">Dashboard Overview</a>
+          <a class="nav-link" href="profile.html">Kelola Profil</a>
+          <a class="nav-link" href="projects.html">Kelola Project</a>
+          <a class="nav-link" href="messages.html">Pesan Masuk / Kontak</a>
+          <a class="nav-link active" href="admins.html">Kelola Admin</a>
+          <hr class="mx-3 text-secondary" />
+          <a class="nav-link text-danger" href="../index.html" id="logoutLink">&larr; Keluar ke Web</a>
+        </nav>
+      </div>
+      <div class="px-4">
+        <hr class="text-secondary" />
+        <div class="form-check form-switch text-white-50">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle" style="cursor: pointer" />
+          <label class="form-check-label small" for="darkModeToggle" style="cursor: pointer">Dark Mode</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN KONTEN -->
+    <div class="main-content">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-outline-secondary d-lg-none me-3" id="openSidebarBtn">☰</button>
+          <h2 class="fw-bold mb-0">Profil Saya</h2>
+        </div>
+        <button type="button" class="btn btn-primary" id="btnTambahAdmin">+ Tambah Admin</button>
+      </div>
+
+      <!-- SKELETON LOADING -->
+      <div id="adminCardSkeleton" class="skeleton-wrap">
+        <div class="profile-main-card text-center">
+          <div class="skeleton rounded-circle mx-auto mb-3" style="width: 130px; height: 130px"></div>
+          <div class="skeleton skeleton-text lg mx-auto mb-2" style="width: 200px"></div>
+          <div class="skeleton skeleton-text sm mx-auto mb-3" style="width: 350px"></div>
+          <div class="skeleton rounded mx-auto" style="width: 120px; height: 38px"></div>
+        </div>
+      </div>
+
+      <!-- CONTAINER DAFTAR KARTU ADMIN (GAYA PROFIL SAYA) -->
+      <div id="adminCardGrid" class="is-loading-content"></div>
+
+      <!-- STATE KOSONG -->
+      <div class="text-center text-muted py-5 d-none" id="emptyState">
+        <h5>Belum Ada Admin</h5>
+        <p>Klik tombol "+ Tambah Admin" untuk menambahkan data.</p>
+      </div>
+    </div>
+
+    <!-- MODAL FORM ADMIN -->
+    <div class="modal fade" id="modalAdmin" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="formAdmin" novalidate>
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalAdminLabel">Edit Profil Admin</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="adminId" />
+
+              <div class="mb-3">
+                <label for="adminNama" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="adminNama" placeholder="Contoh: Zecky Nurfazz" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="adminSubtext" class="form-label">Sub-Keterangan (Kelas / Role / Angkatan)</label>
+                <input type="text" class="form-control" id="adminSubtext" placeholder="Contoh: XII PPLG 2 • PPLG • Angkatan 2026" />
+              </div>
+
+              <div class="mb-3">
+                <label for="adminUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="adminUsername" placeholder="username" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="adminAvatar" class="form-label">URL Foto Profil</label>
+                <input type="url" class="form-control" id="adminAvatar" placeholder="https://domain.com/foto.jpg" />
+              </div>
+
+              <div class="mb-3">
+                <label for="adminPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="adminPassword" placeholder="Isi password baru" />
+                <div class="form-text" id="passwordHint">Kosongkan jika tidak ingin mengubah password.</div>
+              </div>
+
+              <div id="formAdminError" class="alert alert-danger d-none py-2 small" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL HAPUS -->
+    <div class="modal fade" id="modalHapus" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Hapus Admin</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">Hapus akun <strong id="hapusNama"></strong>?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-danger" id="btnKonfirmasiHapus">Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/store.js"></script>
+    <script src="../assets/js/loading.js"></script>
+
+    <script>
+      Store.checkAdminAuth();
+
+      // Dark Mode logic
+      var THEME_KEY = "admin_theme_mode";
+      var toggleSwitch = document.getElementById("darkModeToggle");
+      var savedTheme = localStorage.getItem(THEME_KEY) || "light";
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-bs-theme", theme);
+        if (toggleSwitch) toggleSwitch.checked = theme === "dark";
+        localStorage.setItem(THEME_KEY, theme);
+      }
+      applyTheme(savedTheme);
+      if (toggleSwitch) {
+        toggleSwitch.addEventListener("change", function () { applyTheme(this.checked ? "dark" : "light"); });
+      }
+
+      // Sidebar logic
+      var sidebar = document.getElementById("adminSidebar");
+      var openSidebarBtn = document.getElementById("openSidebarBtn");
+      var closeSidebarBtn = document.getElementById("closeSidebarBtn");
+      if (openSidebarBtn && closeSidebarBtn && sidebar) {
+        openSidebarBtn.addEventListener("click", function () { sidebar.classList.add("show"); });
+        closeSidebarBtn.addEventListener("click", function () { sidebar.classList.remove("show"); });
+      }
+
+      var logoutBtn = document.getElementById("logoutLink");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          Store.logout();
+        });
+      }
+
+      function escapeHtml(str) {
+        if (!str) return "";
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+
+      var deleteId = null;
+      var __firstLoad = true;
+      var currentAdminsList = [];
+
+      // RENDER KARTU DENGAN STRUKTUR IDENTIK SAMA PERSIS REFERENSI "PROFIL SAYA"
+      async function renderCards() {
+        currentAdminsList = await Store.getAdmins();
+        var container = document.getElementById("adminCardGrid");
+        var empty = document.getElementById("emptyState");
+
+        container.innerHTML = "";
+
+        if (!currentAdminsList.length) {
+          if (empty) empty.classList.remove("d-none");
+        } else {
+          if (empty) empty.classList.add("d-none");
+
+          currentAdminsList.forEach(function (a, index) {
+            var nameToShow = a.name || a.nama || a.username || "Zecky Nurfazz";
+            var initial = nameToShow.charAt(0).toUpperCase();
+            var photoUrl = a.avatar || a.photo || "";
+            var subtextToShow = a.role || a.subtext || "XII PPLG 2  •  PPLG  •  Angkatan 2026";
+
+            var cardDiv = document.createElement("div");
+            cardDiv.className = "profile-main-card text-center";
+
+            // Foto profil dengan border biru bulat
+            var avatarImg = photoUrl.trim() !== ""
+              ? '<img src="' + escapeHtml(photoUrl) + '" alt="' + escapeHtml(nameToShow) + '" onerror="this.onerror=null; this.outerHTML=\'<div class=\\\'avatar-fallback\\\'>' + initial + '</div>\';">'
+              : '<div class="avatar-fallback">' + initial + '</div>';
+
+            cardDiv.innerHTML =
+              '<div class="avatar-blue-frame">' + avatarImg + '</div>' +
+              '<div class="profile-name">' + escapeHtml(nameToShow) + '</div>' +
+              '<div class="profile-subtext">' + escapeHtml(subtextToShow) + '</div>' +
+              '<div class="d-flex justify-content-center gap-2 mb-2">' +
+                '<button type="button" class="btn btn-primary profile-action-btn btn-edit" data-id="' + a.id + '">' +
+                  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">' +
+                    '<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>' +
+                    '<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5h6a.5.5 0 0 0 0-1h-6A1.5 1.5 0 0 0 1 2.5v11z"/>' +
+                  '</svg> Edit Profil' +
+                '</button>' +
+                (currentAdminsList.length > 1 ? 
+                  '<button type="button" class="btn btn-outline-danger profile-action-btn btn-hapus" data-id="' + a.id + '">Hapus</button>' : '') +
+              '</div>';
+
+            container.appendChild(cardDiv);
+          });
+
+          container.querySelectorAll(".btn-edit").forEach(function (btn) {
+            btn.addEventListener("click", function () { openEdit(btn.getAttribute("data-id")); });
+          });
+          container.querySelectorAll(".btn-hapus").forEach(function (btn) {
+            btn.addEventListener("click", function () { openHapus(btn.getAttribute("data-id")); });
+          });
+        }
+
+        if (__firstLoad) {
+          __firstLoad = false;
+          if (window.PageLoading && typeof PageLoading.revealContent === "function") {
+            PageLoading.revealContent("adminCardSkeleton", "adminCardGrid");
+          }
+        }
+      }
+
+      function openTambah() {
+        document.getElementById("modalAdminLabel").textContent = "Tambah Admin Baru";
+        document.getElementById("adminId").value = "";
+        document.getElementById("adminNama").value = "";
+        document.getElementById("adminSubtext").value = "XII PPLG 2  •  PPLG  •  Angkatan 2026";
+        document.getElementById("adminUsername").value = "";
+        document.getElementById("adminAvatar").value = "";
+        document.getElementById("adminPassword").value = "";
+        document.getElementById("adminPassword").required = true;
+        document.getElementById("passwordHint").textContent = "Wajib diisi untuk admin baru.";
+        document.getElementById("formAdminError").classList.add("d-none");
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("modalAdmin")).show();
+      }
+
+      function openEdit(id) {
+        var a = currentAdminsList.find(function (x) { return String(x.id) === String(id); });
+        if (!a) return;
+        document.getElementById("modalAdminLabel").textContent = "Edit Profil Admin";
+        document.getElementById("adminId").value = a.id;
+        document.getElementById("adminNama").value = a.name || a.nama || "";
+        document.getElementById("adminSubtext").value = a.role || a.subtext || "XII PPLG 2  •  PPLG  •  Angkatan 2026";
+        document.getElementById("adminUsername").value = a.username || "";
+        document.getElementById("adminAvatar").value = a.avatar || a.photo || "";
+        document.getElementById("adminPassword").value = "";
+        document.getElementById("adminPassword").required = false;
+        document.getElementById("passwordHint").textContent = "Kosongkan jika tidak ingin merubah password.";
+        document.getElementById("formAdminError").classList.add("d-none");
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("modalAdmin")).show();
+      }
+
+      function openHapus(id) {
+        var a = currentAdminsList.find(function (x) { return String(x.id) === String(id); });
+        if (!a) return;
+        deleteId = id;
+        document.getElementById("hapusNama").textContent = a.name || a.username;
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("modalHapus")).show();
+      }
+
+      const btnTambah = document.getElementById("btnTambahAdmin");
+      if (btnTambah) btnTambah.addEventListener("click", openTambah);
+
+      document.getElementById("formAdmin").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var err = document.getElementById("formAdminError");
+        err.classList.add("d-none");
+        var id = document.getElementById("adminId").value;
+        var usernameInput = document.getElementById("adminUsername").value.trim();
+
+        var payload = {
+          name: document.getElementById("adminNama").value.trim(),
+          role: document.getElementById("adminSubtext").value.trim(),
+          username: usernameInput,
+          avatar: document.getElementById("adminAvatar").value.trim(),
+          email: usernameInput.includes("@") ? usernameInput : `${usernameInput}@portfolio.com`,
+        };
+
+        var passVal = document.getElementById("adminPassword").value;
+        if (passVal) payload.password = passVal;
+
+        try {
+          let res;
+          if (id) {
+            res = await Store.updateAdmin(id, payload);
+          } else {
+            if (!payload.password) throw new Error("Password wajib diisi!");
+            res = await Store.addAdmin(payload);
+          }
+
+          if (res && res.error) throw res.error;
+
+          bootstrap.Modal.getInstance(document.getElementById("modalAdmin")).hide();
+          await renderCards();
+        } catch (ex) {
+          err.textContent = ex.message || "Gagal menyimpan data.";
+          err.classList.remove("d-none");
+        }
+      });
+
+      document.getElementById("btnKonfirmasiHapus").addEventListener("click", async function () {
+        if (!deleteId) return;
+        try {
+          var success = await Store.deleteAdmin(deleteId);
+          if (!success) throw new Error("Gagal menghapus data.");
+
+          deleteId = null;
+          bootstrap.Modal.getInstance(document.getElementById("modalHapus")).hide();
+          await renderCards();
+        } catch (ex) {
+          alert(ex.message || "Gagal menghapus admin.");
+        }
+      });
+
+      if (window.PageLoading && typeof PageLoading.withLoading === "function") {
+        PageLoading.withLoading(async function () {
+          await renderCards();
+        });
+      } else {
+        document.addEventListener("DOMContentLoaded", async function () {
+          await renderCards();
+        });
+      }
+    </script>
+  </body>
+</html>

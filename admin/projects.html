@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kelola Project - Admin</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/loading.css" />
+
+    <style>
+      /* SKEMA WARNA TERANG (DEFAULT) */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --bg-main: #f4f6f9;
+        --bg-card: #ffffff;
+        --text-main: #212529;
+        --text-subtle: #6c757d;
+        --border-color: #dee2e6;
+        --sidebar-width: 250px;
+        --input-bg: #ffffff;
+        --input-border: #ced4da;
+      }
+
+      /* SKEMA WARNA GELAP (DARK MODE) */
+      [data-bs-theme="dark"] {
+        --primary-color: #1e293b;
+        --secondary-color: #334155;
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --text-main: #f8fafc;
+        --text-subtle: #cbd5e0;
+        --border-color: #334155;
+        --input-bg: #2d3748;
+        --input-border: #4a5568;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        min-height: 100vh;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--text-main) !important;
+      }
+
+      /* Layout Sidebar Admin */
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: var(--primary-color);
+        color: white;
+        padding-top: 20px;
+        z-index: 1000;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+      }
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 12px 20px;
+        display: block;
+        text-decoration: none;
+      }
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 30px;
+        min-height: 100vh;
+        transition: margin-left 0.3s ease;
+      }
+
+      .table-responsive {
+        background: var(--bg-card);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* Element Thumbnail & Badges */
+      .thumb-sm {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+
+      .thumb-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 6px;
+        background: #e9ecef;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: #6c757d;
+      }
+
+      [data-bs-theme="dark"] .thumb-placeholder {
+        background: #334155;
+        color: #94a3b8;
+      }
+
+      .tech-badge {
+        display: inline-block;
+        font-size: 0.72rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        background: #eef1f4;
+        color: #495057;
+        margin: 0 0.15rem 0.15rem 0;
+      }
+
+      [data-bs-theme="dark"] .tech-badge {
+        background: #334155;
+        color: #e2e8f0;
+      }
+
+      #fotoPreview {
+        max-width: 140px;
+        max-height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .foto-preview-box {
+        min-height: 80px;
+        border: 1px dashed var(--border-color);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.02);
+      }
+
+      /* Modal Scroll Limit */
+      #modalProject .modal-body {
+        max-height: calc(80vh - 130px);
+        overflow-y: auto;
+      }
+
+      /* Responsive Sidebar Mobile */
+      @media (max-width: 991.98px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.show {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Loading Spinner -->
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar d-flex flex-column justify-content-between pb-3" id="adminSidebar">
+      <div>
+        <div class="px-4 mb-4 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold text-white mb-0">My Portofolio</h5>
+          <small class="text-white-50">Zaki Nur Faizi</small>
+          <button class="btn-close btn-close-white d-lg-none" id="closeSidebarBtn" aria-label="Tutup Menu"></button>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link" href="dashboard.html">Dashboard Overview</a>
+          <a class="nav-link" href="profile.html">Kelola Profil</a>
+          <a class="nav-link active" href="projects.html">Kelola Project</a>
+          <a class="nav-link" href="messages.html">Pesan Masuk / Kontak</a>
+          <a class="nav-link" href="admins.html">Kelola Admin</a>
+          <hr class="mx-3 text-secondary" />
+          <a class="nav-link text-danger" href="../index.html" id="logoutLink">&larr; Keluar ke Web</a>
+        </nav>
+      </div>
+
+      <!-- TOGGLE DARK MODE SWITCH -->
+      <div class="px-4">
+        <hr class="text-secondary" />
+        <div class="form-check form-switch text-white-50">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle" style="cursor: pointer" />
+          <label class="form-check-label small" for="darkModeToggle" style="cursor: pointer">
+            <span id="themeLabelText">Dark Mode</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-outline-secondary d-lg-none me-3" id="openSidebarBtn" aria-label="Buka Menu">☰</button>
+          <h2 class="fw-bold mb-0">Kelola Item Project</h2>
+        </div>
+        <button type="button" class="btn btn-primary" id="btnTambah" data-bs-toggle="modal" data-bs-target="#modalProject">+ Tambah Project</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th style="width: 64px">Foto</th>
+              <th>Nama Project</th>
+              <th>Teknologi</th>
+              <th>Tanggal Upload</th>
+              <th class="text-end" style="width: 150px">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="projectTableBody"></tbody>
+        </table>
+        <p id="emptyState" class="text-center text-muted py-4 d-none mb-0">Belum ada project. Klik <strong>+ Tambah Project</strong> untuk menambah.</p>
+      </div>
+    </div>
+
+    <!-- MODAL TAMBAH / EDIT -->
+    <div class="modal fade" id="modalProject" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <form id="formProject" novalidate>
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalProjectLabel">Tambah Project</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+
+            <div class="modal-body">
+              <input type="hidden" id="projectId" value="" />
+
+              <div class="row">
+                <div class="col-md-7 mb-3">
+                  <label for="namaProject" class="form-label">Nama Project <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="namaProject" required placeholder="Contoh: E-Commerce Web App" />
+                  <div class="invalid-feedback">Nama project wajib diisi.</div>
+                </div>
+
+                <div class="col-md-5 mb-3">
+                  <label for="tanggalUpload" class="form-label">Tanggal Upload <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="tanggalUpload" required />
+                  <div class="invalid-feedback">Tanggal upload wajib diisi.</div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="deskripsiProject" class="form-label">Deskripsi <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="deskripsiProject" rows="2" required placeholder="Ringkasan singkat proyek..."></textarea>
+                <div class="invalid-feedback">Deskripsi wajib diisi.</div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="linkLive" class="form-label">Link Live Project <span class="text-danger">*</span></label>
+                  <input type="url" class="form-control" id="linkLive" required placeholder="https://contoh.com" />
+                  <div class="invalid-feedback">Masukkan URL yang valid.</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="linkGithub" class="form-label">Link GitHub</label>
+                  <input type="url" class="form-control" id="linkGithub" placeholder="https://github.com/username/repo" />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="teknologi" class="form-label">Teknologi / Kategori</label>
+                <input type="text" class="form-control" id="teknologi" placeholder="Vue, Nuxt, CSS (pisahkan dengan koma)" />
+                <div class="form-text">Pisahkan setiap item dengan koma.</div>
+              </div>
+
+              <div class="mb-2">
+                <label for="fotoProject" class="form-label">Foto Project</label>
+                <input type="file" class="form-control" id="fotoProject" accept="image/*" />
+              </div>
+              <div class="foto-preview-box mt-2" id="fotoPreviewWrap">
+                <span class="text-muted small" id="fotoPlaceholder">Belum ada foto</span>
+                <img id="fotoPreview" class="d-none" alt="Preview" />
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary" id="btnSimpan">Simpan Project</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL HAPUS -->
+    <div class="modal fade" id="modalHapus" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Hapus Project?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0 small">Project <strong id="hapusNama"></strong> akan dihapus permanen.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-danger btn-sm" id="btnKonfirmasiHapus">Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CDN Dependensi & Script Store Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/store.js"></script>
+    <script src="../assets/js/loading.js"></script>
+
+    <script>
+      (function () {
+        // GUARD: Hanya user yang sudah login yang boleh mengakses halaman ini
+        Store.checkAdminAuth();
+
+        var THEME_KEY = "admin_theme_mode";
+        var deleteId = null;
+        var fotoDataUrl = null;
+        var currentProjectsList = [];
+        var __projectsFirstLoad = true;
+
+        /* LOGIKA DARK MODE TOGGLE */
+        var toggleSwitch = document.getElementById("darkModeToggle");
+        var themeLabelText = document.getElementById("themeLabelText");
+        var savedTheme = localStorage.getItem(THEME_KEY) || "light";
+
+        function applyTheme(theme) {
+          document.documentElement.setAttribute("data-bs-theme", theme);
+          document.documentElement.setAttribute("data-theme", theme);
+          if (toggleSwitch) toggleSwitch.checked = theme === "dark";
+          if (themeLabelText) themeLabelText.textContent = theme === "dark" ? "Dark Mode ☾" : "Light Mode ☀";
+          localStorage.setItem(THEME_KEY, theme);
+        }
+
+        // Inisialisasi Tema
+        applyTheme(savedTheme);
+
+        if (toggleSwitch) {
+          toggleSwitch.addEventListener("change", function () {
+            applyTheme(this.checked ? "dark" : "light");
+          });
+        }
+
+        /* SIDEBAR MOBILE TOGGLE */
+        var sidebar = document.getElementById("adminSidebar");
+        var openSidebarBtn = document.getElementById("openSidebarBtn");
+        var closeSidebarBtn = document.getElementById("closeSidebarBtn");
+
+        if (openSidebarBtn && closeSidebarBtn && sidebar) {
+          openSidebarBtn.addEventListener("click", function () {
+            sidebar.classList.add("show");
+          });
+          closeSidebarBtn.addEventListener("click", function () {
+            sidebar.classList.remove("show");
+          });
+        }
+
+        // Helper Functions
+        function escapeHtml(str) {
+          if (!str) return "";
+          return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function formatTanggal(dateStr) {
+          if (!dateStr) return "—";
+          var d = new Date(dateStr);
+          return d.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+        }
+
+        function todayISO() {
+          return new Date().toISOString().split("T")[0];
+        }
+
+        function techBadges(str) {
+          if (!str) return "";
+          var arr = Array.isArray(str) ? str : String(str).split(",");
+          return arr
+            .map(function (item) {
+              var trimmed = item.trim();
+              if (!trimmed) return "";
+              return '<span class="badge bg-secondary me-1 mb-1 tech-badge">' + escapeHtml(trimmed) + "</span>";
+            })
+            .join("");
+        }
+
+        /* RENDER DAFTAR PROYEK DARI SUPABASE */
+        async function renderTable() {
+          currentProjectsList = await Store.getProjects();
+          var tbody = document.getElementById("projectTableBody");
+          var empty = document.getElementById("emptyState");
+          tbody.innerHTML = "";
+
+          if (!currentProjectsList.length) {
+            if (empty) empty.classList.remove("d-none");
+            return;
+          }
+          if (empty) empty.classList.add("d-none");
+
+          currentProjectsList.forEach(function (p) {
+            var tr = document.createElement("tr");
+            var imgUrl = p.image_url || p.image || p.foto || "";
+            var title = p.title || p.nama || "";
+            var desc = p.description || p.deskripsi || "";
+            var tech = p.technologies || p.tech || p.teknologi || "";
+            var dateVal = p.created_at || p.tanggal || p.created_date;
+
+            var fotoHtml = imgUrl ? '<img src="' + escapeHtml(imgUrl) + '" alt="" class="thumb-sm">' : '<div class="thumb-placeholder">foto</div>';
+
+            tr.innerHTML =
+              "<td>" +
+              fotoHtml +
+              "</td>" +
+              "<td>" +
+              "<strong>" +
+              escapeHtml(title) +
+              "</strong>" +
+              '<div class="small text-muted">' +
+              escapeHtml(desc.slice(0, 60)) +
+              (desc.length > 60 ? "…" : "") +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              techBadges(tech) +
+              "</td>" +
+              "<td>" +
+              formatTanggal(dateVal) +
+              "</td>" +
+              '<td class="text-end text-nowrap">' +
+              '<button type="button" class="btn btn-sm btn-outline-secondary me-1 btn-edit" data-id="' +
+              p.id +
+              '">Edit</button>' +
+              '<button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="' +
+              p.id +
+              '">Hapus</button>' +
+              "</td>";
+            tbody.appendChild(tr);
+          });
+
+          tbody.querySelectorAll(".btn-edit").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              openEdit(btn.getAttribute("data-id"));
+            });
+          });
+          tbody.querySelectorAll(".btn-hapus").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              openHapus(btn.getAttribute("data-id"));
+            });
+          });
+
+          if (__projectsFirstLoad) {
+            __projectsFirstLoad = false;
+            if (window.PageLoading && typeof PageLoading.revealContent === "function") {
+              PageLoading.revealContent("projectTableSkeleton", "projectTableBody");
+            }
+          }
+        }
+
+        function resetForm() {
+          var form = document.getElementById("formProject");
+          if (form) {
+            form.reset();
+            form.classList.remove("was-validated");
+          }
+          document.getElementById("projectId").value = "";
+          document.getElementById("modalProjectLabel").textContent = "Tambah Project";
+          document.getElementById("btnSimpan").textContent = "Simpan Project";
+          fotoDataUrl = null;
+
+          var fp = document.getElementById("fotoPreview");
+          var fph = document.getElementById("fotoPlaceholder");
+          if (fp) {
+            fp.classList.add("d-none");
+            fp.src = "";
+          }
+          if (fph) fph.classList.remove("d-none");
+
+          var elDate = document.getElementById("tanggalUpload");
+          if (elDate) elDate.value = todayISO();
+        }
+
+        function openEdit(id) {
+          var p = currentProjectsList.find(function (x) {
+            return String(x.id) === String(id);
+          });
+          if (!p) return;
+
+          resetForm();
+          document.getElementById("projectId").value = p.id;
+          document.getElementById("namaProject").value = p.title || p.nama || "";
+          document.getElementById("deskripsiProject").value = p.description || p.deskripsi || "";
+          document.getElementById("linkLive").value = p.demo_url || p.linkLive || "";
+          document.getElementById("linkGithub").value = p.github_url || p.linkGithub || "";
+          document.getElementById("teknologi").value = Array.isArray(p.technologies) ? p.technologies.join(", ") : p.technologies || p.teknologi || "";
+
+          var dateVal = p.created_at || p.tanggal || todayISO();
+          document.getElementById("tanggalUpload").value = String(dateVal).split("T")[0];
+
+          document.getElementById("modalProjectLabel").textContent = "Edit Project";
+          document.getElementById("btnSimpan").textContent = "Perbarui Project";
+
+          var imgUrl = p.image_url || p.image || p.foto;
+          if (imgUrl) {
+            fotoDataUrl = imgUrl;
+            var fp = document.getElementById("fotoPreview");
+            var fph = document.getElementById("fotoPlaceholder");
+            if (fp && fph) {
+              fp.src = imgUrl;
+              fp.classList.remove("d-none");
+              fph.classList.add("d-none");
+            }
+          }
+
+          var modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalProject"));
+          modal.show();
+        }
+
+        function openHapus(id) {
+          var p = currentProjectsList.find(function (x) {
+            return String(x.id) === String(id);
+          });
+          if (!p) return;
+          deleteId = id;
+          document.getElementById("hapusNama").textContent = p.title || p.nama || "proyek ini";
+          var modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalHapus"));
+          modal.show();
+        }
+
+        var btnTambah = document.getElementById("btnTambah");
+        if (btnTambah) {
+          btnTambah.addEventListener("click", function () {
+            resetForm();
+          });
+        }
+
+        var fotoInput = document.getElementById("fotoProject");
+        if (fotoInput) {
+          fotoInput.addEventListener("change", function (e) {
+            var file = e.target.files && e.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+              fotoDataUrl = ev.target.result;
+              var fp = document.getElementById("fotoPreview");
+              var fph = document.getElementById("fotoPlaceholder");
+              if (fp && fph) {
+                fp.src = fotoDataUrl;
+                fp.classList.remove("d-none");
+                fph.classList.add("d-none");
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+
+        // Submit Form (Tambah / Edit Proyek ke Supabase)
+        var formProject = document.getElementById("formProject");
+        if (formProject) {
+          formProject.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            var form = e.target;
+            if (!form.checkValidity()) {
+              form.classList.add("was-validated");
+              return;
+            }
+
+            var submitBtn = document.getElementById("btnSimpan");
+            var originalBtnText = submitBtn ? submitBtn.innerHTML : "";
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
+            }
+
+            var id = document.getElementById("projectId").value;
+            var payload = {
+              title: document.getElementById("namaProject").value.trim(),
+              description: document.getElementById("deskripsiProject").value.trim(),
+              demo_url: document.getElementById("linkLive").value.trim(),
+              github_url: document.getElementById("linkGithub").value.trim(),
+              technologies: document.getElementById("teknologi").value.trim(),
+              image_url: fotoDataUrl || "",
+            };
+
+            try {
+              let res;
+              if (id) {
+                res = await Store.updateProject(id, payload);
+              } else {
+                res = await Store.addProject(payload);
+              }
+
+              if (res && res.error) throw res.error;
+
+              var modal = bootstrap.Modal.getInstance(document.getElementById("modalProject"));
+              if (modal) modal.hide();
+
+              await renderTable();
+            } catch (err) {
+              alert("Gagal menyimpan proyek: " + (err.message || "Terjadi kesalahan sistem."));
+            } finally {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+              }
+            }
+          });
+        }
+
+        // Konfirmasi Hapus Proyek dari Supabase
+        var btnKonfirmasiHapus = document.getElementById("btnKonfirmasiHapus");
+        if (btnKonfirmasiHapus) {
+          btnKonfirmasiHapus.addEventListener("click", async function () {
+            if (!deleteId) return;
+            try {
+              var success = await Store.deleteProject(deleteId);
+              if (!success) throw new Error("Gagal menghapus proyek.");
+
+              deleteId = null;
+              var modal = bootstrap.Modal.getInstance(document.getElementById("modalHapus"));
+              if (modal) modal.hide();
+
+              await renderTable();
+            } catch (err) {
+              alert(err.message || "Gagal menghapus proyek dari Supabase.");
+            }
+          });
+        }
+
+        // Logout saat memilih "Keluar ke Web"
+        var logoutBtn = document.getElementById("logoutLink");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            Store.logout();
+          });
+        }
+
+        // Inisialisasi Awal
+        if (window.PageLoading && typeof PageLoading.withLoading === "function") {
+          PageLoading.withLoading(async function () {
+            await renderTable();
+          });
+        } else {
+          document.addEventListener("DOMContentLoaded", async function () {
+            await renderTable();
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

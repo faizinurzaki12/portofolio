@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hubungi Saya - Portofolio Saya</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/loading.css" />
+
+    <style>
+      /* SKEMA WARNA TERANG (DEFAULT) */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #7f8c8d;
+        --bg-main: #ffffff;
+        --bg-card: #ffffff;
+        --text-main: #212529;
+        --text-subtle: #495057;
+        --text-light: #ffffff;
+        --border-color: #e2e8f0;
+        --input-bg: #ffffff;
+        --input-text: #212529;
+        --badge-bg: #f8f9fa;
+      }
+
+      /* SKEMA WARNA GELAP (DARK MODE) */
+      [data-theme="dark"] {
+        --primary-color: #1a252f;
+        --secondary-color: #a0aec0;
+        --bg-main: #121212;
+        --bg-card: #1e1e1e;
+        --text-main: #f7fafc;
+        --text-subtle: #cbd5e0;
+        --border-color: #2d3748;
+        --input-bg: #2d3748;
+        --input-text: #ffffff;
+        --badge-bg: #2d3748;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-main);
+        background-color: var(--bg-main);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--text-main) !important;
+      }
+
+      .custom-text-muted {
+        color: var(--text-subtle) !important;
+      }
+
+      .navbar-custom {
+        background-color: var(--primary-color);
+        transition: background-color 0.3s;
+      }
+      .navbar-custom .nav-link {
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .navbar-custom .nav-link.active,
+      .navbar-custom .nav-link:hover {
+        color: var(--text-light);
+      }
+
+      .btn-custom {
+        background-color: var(--primary-color);
+        color: var(--text-light);
+        border: none;
+      }
+      .btn-custom:hover {
+        background-color: #1a252f;
+        color: var(--text-light);
+      }
+
+      .card-contact {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+
+      /* KOTAK INFORMASI KONTAK & SOSMED */
+      .contact-box {
+        background-color: var(--badge-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+        word-break: break-all;
+      }
+      .contact-box:hover {
+        transform: translateY(-2px);
+        border-color: #0d6efd;
+        color: var(--text-main);
+      }
+
+      .form-label {
+        color: var(--text-main);
+      }
+
+      .form-control {
+        background-color: var(--input-bg);
+        color: var(--input-text);
+        border-color: var(--border-color);
+      }
+
+      .form-control:focus {
+        background-color: var(--input-bg);
+        color: var(--input-text);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25);
+      }
+
+      .form-control::placeholder {
+        color: var(--text-subtle);
+        opacity: 0.7;
+      }
+
+      .theme-toggle-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: var(--text-light);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .theme-toggle-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      footer {
+        background-color: var(--primary-color);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 20px 0;
+        margin-top: auto;
+        transition: background-color 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Loading Spinner -->
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">MyPortfolio</a>
+
+        <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-3">
+          <button class="theme-toggle-btn me-2" id="themeToggleBtn" aria-label="Mode Gelap">
+            <span id="themeIcon">☾</span>
+          </button>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Buka menu navigasi">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+            <li class="nav-item"><a class="nav-link" href="project.html">Project</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">Tentang</a></li>
+            <li class="nav-item"><a class="nav-link active" href="contact.html">Kontak</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HALAMAN FORM KONTAK -->
+    <main class="py-5">
+      <div class="container" style="max-width: 750px">
+        <h1 class="fw-bold text-center mb-2">Hubungi Saya</h1>
+        <p class="text-center custom-text-muted mb-4">Punya pertanyaan atau proyek kerja sama? Silakan hubungi langsung atau kirim pesan di bawah.</p>
+
+        <!-- KOTAK LINK SOSMED & KONTAK DARI ADMIN -->
+        <div id="socialLinksContainer" class="row g-2 justify-content-center mb-4"></div>
+
+        <!-- FORM KIRIM PESAN -->
+        <div class="card card-contact p-4">
+          <form id="contactForm">
+            <div class="mb-3">
+              <label for="name" class="form-label fw-semibold">Nama Lengkap</label>
+              <input type="text" class="form-control" id="name" placeholder="Masukkan nama Anda" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label fw-semibold">Alamat Email</label>
+              <input type="email" class="form-control" id="email" placeholder="nama@email.com" required />
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label fw-semibold">Pesan Anda</label>
+              <textarea class="form-control" id="message" rows="5" placeholder="Tuliskan pesan Anda di sini..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-custom w-100 py-2 fw-semibold">Kirim Pesan</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center">
+      <div class="container">
+        <p class="mb-0">&copy; 2026 MyPortfolio. Semua Hak Dilindungi.</p>
+      </div>
+    </footer>
+
+    <!-- JS Files Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/store.js"></script>
+    <script src="assets/js/loading.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // 1. Matikan Loading Spinner
+        if (window.PageLoading && typeof PageLoading.pageReady === "function") {
+          PageLoading.pageReady();
+        }
+
+        // 2. Load Tautan Kontak & Medsos dari Admin (Supabase)
+        try {
+          const profile = await Store.getProfile();
+          const linksContainer = document.getElementById("socialLinksContainer");
+
+          if (profile && linksContainer) {
+            let boxesHTML = "";
+
+            // Custom list kontak & sosial media dari data profil
+            const links = [
+              { label: "Email", val: profile.email, prefix: "mailto:", icon: "✉" },
+              { label: "GitHub", val: profile.github || profile.github_url, prefix: "", icon: "💻" },
+              { label: "LinkedIn", val: profile.linkedin || profile.linkedin_url, prefix: "", icon: "💼" },
+              { label: "Instagram", val: profile.instagram || profile.instagram_url, prefix: "", icon: "📷" },
+            ];
+
+            links.forEach((item) => {
+              if (item.val) {
+                const href = item.prefix ? `${item.prefix}${item.val}` : item.val;
+                boxesHTML += `
+                  <div class="col-6 col-md-3">
+                    <a href="${href}" target="_blank" rel="noopener noreferrer" class="contact-box shadow-sm text-center justify-content-center">
+                      <span class="fs-6">${item.icon}</span>
+                      <strong class="small">${item.label}</strong>
+                    </a>
+                  </div>
+                `;
+              }
+            });
+
+            linksContainer.innerHTML = boxesHTML;
+          }
+        } catch (err) {
+          console.error("Gagal memuat link kontak:", err);
+        }
+      });
+
+      // --- LOGIKA SWITCH TEMA (DARK MODE) ---
+      const toggleBtn = document.getElementById("themeToggleBtn");
+      const themeIcon = document.getElementById("themeIcon");
+
+      if (toggleBtn) {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.setAttribute("data-theme", "dark");
+          if (themeIcon) themeIcon.textContent = "☀";
+          toggleBtn.setAttribute("aria-label", "Mode Terang");
+        }
+
+        toggleBtn.addEventListener("click", () => {
+          const currentTheme = document.documentElement.getAttribute("data-theme");
+          let newTheme = "light";
+
+          if (currentTheme !== "dark") {
+            newTheme = "dark";
+            if (themeIcon) themeIcon.textContent = "☀";
+            toggleBtn.setAttribute("aria-label", "Mode Terang");
+          } else {
+            if (themeIcon) themeIcon.textContent = "☾";
+            toggleBtn.setAttribute("aria-label", "Mode Gelap");
+          }
+
+          document.documentElement.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+        });
+      }
+
+      // --- LOGIKA FORM KONTAK (SUPABASE INTEGRATION) ---
+      const contactForm = document.getElementById("contactForm");
+
+      if (contactForm) {
+        contactForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const submitBtn = contactForm.querySelector('button[type="submit"]');
+          const nameInput = document.getElementById("name");
+          const emailInput = document.getElementById("email");
+          const messageInput = document.getElementById("message");
+
+          const payload = {
+            name: nameInput ? nameInput.value.trim() : "",
+            email: emailInput ? emailInput.value.trim() : "",
+            subject: "Pesan Baru dari Portofolio",
+            message: messageInput ? messageInput.value.trim() : "",
+          };
+
+          if (!payload.name || !payload.email || !payload.message) {
+            alert("Mohon lengkapi Nama, Email, dan Pesan Anda.");
+            return;
+          }
+
+          const originalBtnText = submitBtn ? submitBtn.innerHTML : "";
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Mengirim...';
+          }
+
+          try {
+            const { data, error } = await Store.addMessage(payload);
+
+            if (!error) {
+              alert(`Terima kasih, ${payload.name}! Pesan Anda berhasil terkirim.`);
+              contactForm.reset();
+            } else {
+              throw error;
+            }
+          } catch (error) {
+            console.error("Gagal mengirim pesan:", error);
+            alert("Gagal mengirim pesan: " + (error.message || "Terjadi kesalahan jaringan."));
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+            }
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

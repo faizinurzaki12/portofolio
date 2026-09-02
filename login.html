@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Admin Panel</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/loading.css" />
+
+    <style>
+      /* SKEMA WARNA TERANG (DEFAULT) */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --bg-light: #f4f6f9;
+        --card-bg: #ffffff;
+        --text-main: #333333;
+        --text-subtle: #6c757d;
+        --border-color: #e9ecef;
+        --input-bg: #ffffff;
+        --input-text: #333333;
+      }
+
+      /* SKEMA WARNA GELAP (DARK MODE) */
+      [data-theme="dark"],
+      [data-bs-theme="dark"] {
+        --primary-color: #1a252f;
+        --secondary-color: #2c3e50;
+        --bg-light: #121212;
+        --card-bg: #1e1e1e;
+        --text-main: #f7fafc;
+        --text-subtle: #cbd5e0;
+        --border-color: #2d3748;
+        --input-bg: #2d3748;
+        --input-text: #ffffff;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 20px;
+        position: relative;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      /* FIX Z-INDEX TOMBOL TOGGLE */
+      .theme-toggle-floating {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 8px 14px;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s ease-in-out;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .theme-toggle-floating:hover {
+        transform: translateY(-2px);
+      }
+
+      .login-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 400px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+
+      .login-header {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        padding: 30px 20px;
+        text-align: center;
+        transition: background-color 0.3s;
+      }
+
+      .login-header h4 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .login-header p {
+        margin: 6px 0 0;
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .login-body {
+        padding: 30px 25px;
+      }
+
+      .form-label {
+        color: var(--text-main);
+      }
+
+      .form-control {
+        background-color: var(--input-bg);
+        color: var(--input-text);
+        border-color: var(--border-color);
+      }
+
+      .form-control:focus {
+        background-color: var(--input-bg);
+        color: var(--input-text);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25);
+      }
+
+      .btn-login {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: #ffffff;
+        padding: 10px;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .btn-login:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Loading Spinner -->
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- Tombol Dark/Light Mode -->
+    <button type="button" class="theme-toggle-floating" id="themeToggleBtn" aria-label="Mode Gelap">
+      <span id="themeIcon">☾</span>
+      <span id="themeText" class="small">Dark</span>
+    </button>
+
+    <div class="login-card">
+      <div class="login-header">
+        <h4>Admin Panel</h4>
+        <p>Masuk untuk mengelola aplikasi</p>
+      </div>
+
+      <div class="login-body">
+        <form id="formLogin" novalidate>
+          <div id="loginError" class="alert alert-danger d-none py-2 small" role="alert"></div>
+
+          <div class="mb-3">
+            <label for="username" class="form-label font-weight-bold">Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Masukkan username" required autofocus />
+            <div class="invalid-feedback">Username wajib diisi.</div>
+          </div>
+
+          <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Masukkan password" required />
+            <div class="invalid-feedback">Password wajib diisi.</div>
+          </div>
+
+          <button type="submit" class="btn btn-login" id="btnSubmit">
+            <span class="btn-text">Masuk</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 1. Bootstrap JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 2. Loading Script -->
+    <script src="assets/js/loading.js"></script>
+    <script>
+      if (window.PageLoading && typeof PageLoading.pageReady === "function") {
+        PageLoading.pageReady();
+      }
+    </script>
+
+    <!-- 3. Supabase SDK DULUAN sebelum Store.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/store.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Redirect jika sudah login
+        if (typeof Store !== "undefined" && Store.isLoggedIn()) {
+          window.location.href = "admin/dashboard.html";
+          return;
+        }
+
+        // ==========================================
+        // 1. LOGIKA DINAMIS TEMA (DARK / LIGHT MODE)
+        // ==========================================
+        const toggleBtn = document.getElementById("themeToggleBtn");
+        const themeIcon = document.getElementById("themeIcon");
+        const themeText = document.getElementById("themeText");
+
+        function applyTheme(theme) {
+          document.documentElement.setAttribute("data-theme", theme);
+          document.documentElement.setAttribute("data-bs-theme", theme);
+
+          if (theme === "dark") {
+            if (themeIcon) themeIcon.textContent = "☀";
+            if (themeText) themeText.textContent = "Light";
+            if (toggleBtn) toggleBtn.setAttribute("aria-label", "Mode Terang");
+          } else {
+            if (themeIcon) themeIcon.textContent = "☾";
+            if (themeText) themeText.textContent = "Dark";
+            if (toggleBtn) toggleBtn.setAttribute("aria-label", "Mode Gelap");
+          }
+        }
+
+        // Cek tema tersimpan / preferensi OS
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        let currentTheme = savedTheme || (prefersDark ? "dark" : "light");
+        applyTheme(currentTheme);
+
+        // Event listener toggle
+        if (toggleBtn) {
+          toggleBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            applyTheme(currentTheme);
+            localStorage.setItem("theme", currentTheme);
+          });
+        }
+
+        // ==========================================
+        // 2. LOGIKA LOGIN DINAMIS VIA JS & SUPABASE
+        // ==========================================
+        const loginForm = document.getElementById("formLogin");
+        const loginError = document.getElementById("loginError");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const btnSubmit = document.getElementById("btnSubmit");
+
+        // Sembunyikan error saat mengetik ulang
+        [usernameInput, passwordInput].forEach((input) => {
+          if (input) {
+            input.addEventListener("input", () => {
+              loginError.classList.add("d-none");
+              loginForm.classList.remove("was-validated");
+            });
+          }
+        });
+
+        if (loginForm) {
+          loginForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // Reset UI State Error
+            loginError.classList.add("d-none");
+            loginError.textContent = "";
+
+            // Validasi Bootstrap
+            if (!loginForm.checkValidity()) {
+              loginForm.classList.add("was-validated");
+              return;
+            }
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+              showError("Username dan password wajib diisi.");
+              return;
+            }
+
+            // Set UI Loading State Dinamis
+            setLoadingState(true);
+
+            try {
+              // Panggil auth dari Store (Supabase)
+              const result = await Store.login(username, password);
+
+              if (result && result.success) {
+                // Tampilkan respon sukses sejenak sebelum redirect
+                btnSubmit.classList.remove("btn-primary");
+                btnSubmit.classList.add("btn-success");
+                btnSubmit.innerHTML = "✓ Berhasil! Mengalihkan...";
+
+                setTimeout(() => {
+                  window.location.href = "admin/dashboard.html";
+                }, 500);
+              } else {
+                showError(result.message || "Username atau password salah!");
+                setLoadingState(false);
+              }
+            } catch (err) {
+              showError("Terjadi kesalahan koneksi/sistem server.");
+              console.error("Login Error:", err);
+              setLoadingState(false);
+            }
+          });
+        }
+
+        function setLoadingState(isLoading) {
+          if (isLoading) {
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Memeriksa...';
+          } else {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<span class="btn-text">Masuk</span>';
+          }
+        }
+
+        function showError(message) {
+          if (loginError) {
+            loginError.textContent = message;
+            loginError.classList.remove("d-none");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

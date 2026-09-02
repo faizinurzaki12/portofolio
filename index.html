@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beranda - Portofolio Saya</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/loading.css" />
+
+    <style>
+      /* SKEMA WARNA TERANG (DEFAULT) */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #7f8c8d;
+        --bg-main: #ffffff;
+        --bg-card: #ffffff;
+        --text-main: #212529;
+        --text-subtle: #495057;
+        --text-link: #0d6efd;
+        --text-light: #ffffff;
+        --border-color: #e2e8f0;
+        --card-thumb-bg: #4a5568;
+      }
+
+      /* SKEMA WARNA GELAP (DARK MODE) */
+      [data-theme="dark"] {
+        --primary-color: #1a252f;
+        --secondary-color: #a0aec0;
+        --bg-main: #121212;
+        --bg-card: #1e1e1e;
+        --text-main: #f7fafc;
+        --text-subtle: #cbd5e0;
+        --text-link: #63b3ed;
+        --border-color: #2d3748;
+        --card-thumb-bg: #2d3748;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-main);
+        background-color: var(--bg-main);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+      main {
+        flex: 1;
+      }
+
+      /* KONTROL TEKS UTAMA */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .card-title {
+        color: var(--text-main) !important;
+      }
+
+      .custom-text-muted {
+        color: var(--text-subtle) !important;
+      }
+
+      .custom-link {
+        color: var(--text-link) !important;
+      }
+
+      .navbar-custom {
+        background-color: var(--primary-color);
+        transition: background-color 0.3s;
+      }
+      .navbar-custom .nav-link {
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .navbar-custom .nav-link.active,
+      .navbar-custom .nav-link:hover {
+        color: var(--text-light);
+      }
+      .btn-custom {
+        background-color: var(--primary-color);
+        color: var(--text-light);
+        border: none;
+      }
+      .btn-custom:hover {
+        background-color: #1a252f;
+        color: var(--text-light);
+      }
+
+      /* STYLING FOTO PROFIL HERO */
+      .profile-avatar-hero {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border: 4px solid var(--primary-color);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      /* CARD ADJUSTMENT */
+      .card-project {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+      .card-project:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      .card-thumbnail {
+        background-color: var(--card-thumb-bg);
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        transition: background-color 0.3s;
+      }
+
+      /* Tombol Switch Mode */
+      .theme-toggle-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: var(--text-light);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .theme-toggle-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      footer {
+        background-color: var(--primary-color);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 20px 0;
+        margin-top: auto;
+        transition: background-color 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page Loading Spinner -->
+    <div id="pageLoader" class="page-loader" aria-live="polite" aria-busy="true">
+      <div class="page-loader-spinner" role="status" aria-label="Memuat halaman"></div>
+    </div>
+
+    <!-- NAVIGASI UTAMA -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">MyPortfolio</a>
+
+        <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-3">
+          <button class="theme-toggle-btn me-2" id="themeToggleBtn" aria-label="Mode Gelap">
+            <span id="themeIcon">☾</span>
+          </button>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Buka menu navigasi">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
+            <li class="nav-item"><a class="nav-link" href="project.html">Project</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">Tentang</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Kontak</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <main class="py-5">
+      <div class="container text-center py-4">
+        <!-- Skeleton hero -->
+        <div id="heroSkeleton" class="skeleton-wrap">
+          <div class="skeleton rounded-circle mx-auto mb-3" style="width: 140px; height: 140px"></div>
+          <div class="skeleton skeleton-text xl mx-auto mb-3" style="max-width: 520px"></div>
+          <div class="skeleton skeleton-text md mx-auto mb-4" style="max-width: 420px"></div>
+          <div class="d-flex justify-content-center gap-2">
+            <div class="skeleton" style="width: 140px; height: 48px; border-radius: 8px"></div>
+            <div class="skeleton" style="width: 140px; height: 48px; border-radius: 8px"></div>
+          </div>
+        </div>
+
+        <!-- Konten hero asli -->
+        <div id="heroContent" class="is-loading-content">
+          <!-- Foto Profil Bulat -->
+          <div class="mb-4">
+            <img id="heroAvatar" src="" alt="Foto Profil" class="rounded-circle profile-avatar-hero" />
+          </div>
+          <h1 class="display-4 fw-bold mb-3" id="heroTitle">Halo, Saya Seorang Web Developer</h1>
+          <p class="lead custom-text-muted mb-4" id="heroTagline">Selamat datang di portofolio digital saya.</p>
+          <a href="project.html" class="btn btn-custom btn-lg px-4 me-2">Lihat Project</a>
+          <a href="contact.html" class="btn btn-outline-secondary btn-lg px-4">Hubungi Saya</a>
+        </div>
+      </div>
+
+      <!-- RINGKASAN PROJECT LATEST -->
+      <div class="container my-5">
+        <h2 class="text-center fw-bold mb-4">Project Terbaru</h2>
+        <!-- Skeleton kartu project -->
+        <div id="latestProjectsSkeleton" class="skeleton-wrap row g-4">
+          <div class="col-md-4">
+            <div class="skeleton-card">
+              <div class="skeleton skeleton-thumb"></div>
+              <div class="p-3">
+                <div class="skeleton skeleton-text md"></div>
+                <div class="skeleton skeleton-text full"></div>
+                <div class="skeleton skeleton-text sm"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="skeleton-card">
+              <div class="skeleton skeleton-thumb"></div>
+              <div class="p-3">
+                <div class="skeleton skeleton-text md"></div>
+                <div class="skeleton skeleton-text full"></div>
+                <div class="skeleton skeleton-text sm"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="skeleton-card">
+              <div class="skeleton skeleton-thumb"></div>
+              <div class="p-3">
+                <div class="skeleton skeleton-text md"></div>
+                <div class="skeleton skeleton-text full"></div>
+                <div class="skeleton skeleton-text sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-4 is-loading-content" id="latestProjectsRow">
+          <!-- Kartu project disisipkan lewat JS -->
+        </div>
+        <p class="text-center custom-text-muted py-4 d-none" id="latestProjectsEmpty">Belum ada project untuk ditampilkan.</p>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center">
+      <div class="container">
+        <p class="mb-0">&copy; 2026 MyPortfolio. Semua Hak Dilindungi.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Supabase SDK & Store -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/store.js"></script>
+
+    <!-- Helper Loading -->
+    <script src="assets/js/loading.js"></script>
+
+    <!-- Script Fetch Data & Render UI -->
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const latestProjectsRow = document.getElementById("latestProjectsRow");
+        const latestProjectsEmpty = document.getElementById("latestProjectsEmpty");
+        const heroAvatar = document.getElementById("heroAvatar");
+
+        // Penanganan error gambar jika file tidak ada atau broken
+        if (heroAvatar) {
+          heroAvatar.onerror = function () {
+            this.onerror = null; // Menghindari infinite loop
+            this.src = "https://ui-avatars.com/api/?name=User&background=2c3e50&color=fff&size=140";
+          };
+        }
+
+        try {
+          // 1. Fetch data profile dan render ke Hero (Nama, Tagline, dan Foto)
+          const profile = await Store.getProfile();
+          if (profile) {
+            const heroTitle = document.getElementById("heroTitle");
+            const heroTagline = document.getElementById("heroTagline");
+
+            const displayName = profile.name || profile.nama_lengkap || profile.nama || "Zaki Nur Faizi";
+            if (heroTitle) {
+              heroTitle.textContent = `Halo, Saya ${displayName}`;
+            }
+
+            if (heroTagline) {
+              heroTagline.textContent = profile.tagline || profile.bio || profile.bio_singkat || "Selamat datang di portofolio digital saya.";
+            }
+
+            // Ambil gambar dari properti avatar, foto, atau avatar_url
+            const photoSrc = profile.avatar || profile.foto || profile.avatar_url;
+            if (heroAvatar) {
+              if (photoSrc && photoSrc.trim() !== "") {
+                heroAvatar.src = photoSrc;
+              } else {
+                heroAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=2c3e50&color=fff&size=140`;
+              }
+            }
+          }
+
+          // Transisi animasi skeleton Hero -> Konten Utama
+          if (window.PageLoading) {
+            PageLoading.revealContent("heroSkeleton", "heroContent");
+          }
+
+          // 2. Fetch data projects dan render ke Project Terbaru
+          const projects = await Store.getProjects();
+
+          if (projects && projects.length > 0) {
+            const recentProjects = projects.slice(0, 3);
+
+            latestProjectsRow.innerHTML = recentProjects
+              .map((project) => {
+                const techList = Array.isArray(project.technologies) ? project.technologies : project.technologies ? project.technologies.split(",") : [];
+
+                const imageUrl = project.image_url || "https://via.placeholder.com/600x400?text=No+Image";
+
+                return `
+                <div class="col-md-4">
+                  <div class="card card-project h-100">
+                    <img src="${imageUrl}" class="card-img-top" alt="${project.title || "Project"}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                      <h5 class="card-title fw-bold">${project.title || "Tanpa Judul"}</h5>
+                      <p class="card-text custom-text-muted flex-grow-1">${project.description || ""}</p>
+                      <div class="mb-3">
+                        ${techList.map((tech) => `<span class="badge bg-secondary me-1">${tech.trim()}</span>`).join("")}
+                      </div>
+                      <a href="project-detail.html?id=${project.id}" class="custom-link fw-bold text-decoration-none">Selengkapnya &rarr;</a>
+                    </div>
+                  </div>
+                </div>
+              `;
+              })
+              .join("");
+
+            if (latestProjectsEmpty) latestProjectsEmpty.classList.add("d-none");
+          } else {
+            if (latestProjectsEmpty) latestProjectsEmpty.classList.remove("d-none");
+          }
+
+          // Transisi animasi skeleton Projects -> Konten Utama
+          if (window.PageLoading) {
+            PageLoading.revealContent("latestProjectsSkeleton", "latestProjectsRow");
+          }
+        } catch (err) {
+          console.error("Gagal memuat data beranda:", err);
+          if (latestProjectsEmpty) latestProjectsEmpty.classList.remove("d-none");
+        } finally {
+          if (window.PageLoading) {
+            PageLoading.hidePageLoader();
+          }
+        }
+      });
+    </script>
+
+    <!-- SCRIPT DARK MODE -->
+    <script>
+      const toggleBtn = document.getElementById("themeToggleBtn");
+      const themeIcon = document.getElementById("themeIcon");
+
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute("data-theme", "dark");
+        if (themeIcon) themeIcon.textContent = "☀";
+        if (toggleBtn) toggleBtn.setAttribute("aria-label", "Mode Terang");
+      }
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+          const currentTheme = document.documentElement.getAttribute("data-theme");
+          let newTheme = "light";
+
+          if (currentTheme !== "dark") {
+            newTheme = "dark";
+            if (themeIcon) themeIcon.textContent = "☀";
+            toggleBtn.setAttribute("aria-label", "Mode Terang");
+          } else {
+            if (themeIcon) themeIcon.textContent = "☾";
+            toggleBtn.setAttribute("aria-label", "Mode Gelap");
+          }
+
+          document.documentElement.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+        });
+      }
+    </script>
+  </body>
+</html>
