@@ -209,7 +209,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Redirect jika sudah login
         if (typeof Store !== "undefined" && Store.isLoggedIn()) {
-          window.location.href = "admin/dashboard.html";
+          window.location.href = "admin/dashboard";
           return;
         }
 
@@ -303,10 +303,10 @@
                 // Tampilkan respon sukses sejenak sebelum redirect
                 btnSubmit.classList.remove("btn-primary");
                 btnSubmit.classList.add("btn-success");
-                btnSubmit.innerHTML = "✓ Berhasil! Mengalihkan...";
+                // btnSubmit.innerHTML = "✓ Berhasil! Mengalihkan...";
 
                 setTimeout(() => {
-                  window.location.href = "admin/dashboard.html";
+                  window.location.href = "admin/dashboard";
                 }, 500);
               } else {
                 showError(result.message || "Username atau password salah!");
@@ -323,7 +323,7 @@
         function setLoadingState(isLoading) {
           if (isLoading) {
             btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Memeriksa...';
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Tunggu bentarr...';
           } else {
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<span class="btn-text">Masuk</span>';
