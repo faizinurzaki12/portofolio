@@ -168,7 +168,7 @@
         </nav>
       </div>
 
-      <!-- TOGGLE DARK MODE SWITCH (DISAMAKAN DENGAN PROJECTS.HTML) -->
+      <!-- TOGGLE DARK MODE SWITCH -->
       <div class="px-4">
         <hr class="text-secondary" />
         <div class="form-check form-switch text-white-50">
@@ -182,10 +182,19 @@
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <!-- Header Atas dengan Toggler Mobile & Toggle Dark Mode Mobile -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div class="d-flex align-items-center">
           <button class="btn btn-outline-secondary d-lg-none me-3" id="openSidebarBtn" aria-label="Buka Menu">☰</button>
           <h2 class="fw-bold mb-0">Kelola Profil Saya</h2>
+        </div>
+
+        <!-- Toggle Dark/Light Mode khusus Layar HP (Mobile) -->
+        <div class="form-check form-switch d-lg-none my-auto">
+          <input class="form-check-input" type="checkbox" id="darkModeToggleMobile" style="cursor: pointer" />
+          <label class="form-check-label small" for="darkModeToggleMobile" style="cursor: pointer">
+            <span id="themeLabelTextMobile">Dark</span>
+          </label>
         </div>
       </div>
 
@@ -300,16 +309,24 @@
 
       var THEME_KEY = "admin_theme_mode";
 
-      /* LOGIKA DARK MODE TOGGLE */
+      /* LOGIKA DARK MODE TOGGLE (DESKTOP & MOBILE SINKRON) */
       var toggleSwitch = document.getElementById("darkModeToggle");
+      var toggleSwitchMobile = document.getElementById("darkModeToggleMobile");
       var themeLabelText = document.getElementById("themeLabelText");
+      var themeLabelTextMobile = document.getElementById("themeLabelTextMobile");
       var savedTheme = localStorage.getItem(THEME_KEY) || "light";
 
       function applyTheme(theme) {
         document.documentElement.setAttribute("data-bs-theme", theme);
         document.documentElement.setAttribute("data-theme", theme);
-        if (toggleSwitch) toggleSwitch.checked = theme === "dark";
-        if (themeLabelText) themeLabelText.textContent = theme === "dark" ? "Dark Mode ☾" : "Light Mode ☀";
+        var isDark = theme === "dark";
+
+        if (toggleSwitch) toggleSwitch.checked = isDark;
+        if (toggleSwitchMobile) toggleSwitchMobile.checked = isDark;
+
+        if (themeLabelText) themeLabelText.textContent = isDark ? "Dark Mode ☾" : "Light Mode ☀";
+        if (themeLabelTextMobile) themeLabelTextMobile.textContent = isDark ? "Dark ☾" : "Light ☀";
+
         localStorage.setItem(THEME_KEY, theme);
       }
 
@@ -318,6 +335,12 @@
 
       if (toggleSwitch) {
         toggleSwitch.addEventListener("change", function () {
+          applyTheme(this.checked ? "dark" : "light");
+        });
+      }
+
+      if (toggleSwitchMobile) {
+        toggleSwitchMobile.addEventListener("change", function () {
           applyTheme(this.checked ? "dark" : "light");
         });
       }
@@ -477,4 +500,4 @@
       }
     </script>
   </body>
-</html>
+</html> 

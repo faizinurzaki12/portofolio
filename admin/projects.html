@@ -203,7 +203,7 @@
         </nav>
       </div>
 
-      <!-- TOGGLE DARK MODE SWITCH -->
+      <!-- TOGGLE DARK MODE SWITCH (SIDEBAR) -->
       <div class="px-4">
         <hr class="text-secondary" />
         <div class="form-check form-switch text-white-50">
@@ -217,12 +217,24 @@
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+      <!-- HEADER AREA (DENGAN TOGGLE DARK MODE DI KANAN ATAS) -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center">
           <button class="btn btn-outline-secondary d-lg-none me-3" id="openSidebarBtn" aria-label="Buka Menu">☰</button>
           <h2 class="fw-bold mb-0">Kelola Item Project</h2>
         </div>
-        <button type="button" class="btn btn-primary" id="btnTambah" data-bs-toggle="modal" data-bs-target="#modalProject">+ Tambah Project</button>
+
+        <div class="d-flex align-items-center gap-3">
+          <!-- TOGGLE DARK MODE DI TOPBAR HEADER -->
+          <div class="form-check form-switch mb-0 d-flex align-items-center gap-2">
+            <input class="form-check-input mt-0" type="checkbox" id="headerDarkModeToggle" style="cursor: pointer" />
+            <label class="form-check-label fw-semibold" for="headerDarkModeToggle" style="cursor: pointer">
+              <span id="headerThemeLabelText">Dark ☾</span>
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-primary" id="btnTambah" data-bs-toggle="modal" data-bs-target="#modalProject">+ Tambah Project</button>
+        </div>
       </div>
 
       <div class="table-responsive">
@@ -340,7 +352,6 @@
 
     <script>
       (function () {
-        // GUARD: Hanya user yang sudah login yang boleh mengakses halaman ini
         Store.checkAdminAuth();
 
         var THEME_KEY = "admin_theme_mode";
@@ -349,24 +360,38 @@
         var currentProjectsList = [];
         var __projectsFirstLoad = true;
 
-        /* LOGIKA DARK MODE TOGGLE */
+        /* LOGIKA DARK MODE TOGGLE (SIDEBAR & HEADER) */
         var toggleSwitch = document.getElementById("darkModeToggle");
+        var headerToggleSwitch = document.getElementById("headerDarkModeToggle");
         var themeLabelText = document.getElementById("themeLabelText");
+        var headerThemeLabelText = document.getElementById("headerThemeLabelText");
         var savedTheme = localStorage.getItem(THEME_KEY) || "light";
 
         function applyTheme(theme) {
           document.documentElement.setAttribute("data-bs-theme", theme);
           document.documentElement.setAttribute("data-theme", theme);
-          if (toggleSwitch) toggleSwitch.checked = theme === "dark";
-          if (themeLabelText) themeLabelText.textContent = theme === "dark" ? "Dark Mode ☾" : "Light Mode ☀";
+
+          var isDark = theme === "dark";
+
+          if (toggleSwitch) toggleSwitch.checked = isDark;
+          if (headerToggleSwitch) headerToggleSwitch.checked = isDark;
+
+          if (themeLabelText) themeLabelText.textContent = isDark ? "Dark Mode ☾" : "Light Mode ☀";
+          if (headerThemeLabelText) headerThemeLabelText.textContent = isDark ? "Dark ☾" : "Light ☀";
+
           localStorage.setItem(THEME_KEY, theme);
         }
 
-        // Inisialisasi Tema
         applyTheme(savedTheme);
 
         if (toggleSwitch) {
           toggleSwitch.addEventListener("change", function () {
+            applyTheme(this.checked ? "dark" : "light");
+          });
+        }
+
+        if (headerToggleSwitch) {
+          headerToggleSwitch.addEventListener("change", function () {
             applyTheme(this.checked ? "dark" : "light");
           });
         }
@@ -424,7 +449,7 @@
           var empty = document.getElementById("emptyState");
           tbody.innerHTML = "";
 
-          if (!currentProjectsList.length) {
+          if (!currentProjectsList || !currentProjectsList.length) {
             if (empty) empty.classList.remove("d-none");
             return;
           }
@@ -611,6 +636,7 @@
               demo_url: document.getElementById("linkLive").value.trim(),
               github_url: document.getElementById("linkGithub").value.trim(),
               technologies: document.getElementById("teknologi").value.trim(),
+              created_at: document.getElementById("tanggalUpload").value,
               image_url: fotoDataUrl || "",
             };
 

@@ -64,12 +64,12 @@ const Store = {
 
   logout() {
     sessionStorage.removeItem("admin_session");
-    window.location.href = "../login.html";
+    window.location.href = "../login";
   },
 
   checkAdminAuth() {
     if (!this.isLoggedIn()) {
-      window.location.href = "../login.html";
+      window.location.href = "../login";
     }
   },
 
